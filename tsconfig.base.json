@@ -626,9 +626,6 @@
       "@activepieces/piece-moxie-crm": [
         "packages/pieces/community/moxie-crm/src/index.ts"
       ],
-      "@activepieces/piece-myjvn": [
-        "packages/pieces/community/myjvn/src/index.ts"
-      ],
       "@activepieces/piece-mysql": [
         "packages/pieces/community/mysql/src/index.ts"
       ],
