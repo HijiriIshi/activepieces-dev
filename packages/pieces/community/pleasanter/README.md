@@ -8,11 +8,13 @@ This library was generated with [Nx](https://nx.dev).
 [![GitHub](https://img.shields.io/badge/piece--pleasanter-dev-grean?logo=github)](https://github.com/HijiriIshi/activepieces-dev/tree/dev-piece-pleasanter)
 
 ## Planned Features
-- [ ] Record update Group and User
-- [ ] View functionality
-- [ ] Support for attachments
+- [x] Record update Group and User
+- [x] View functionality
+- [ ] Helper to build views
+- [x] Support for attachments (Attachment deletion is not supported.)
     - [x] v0.0.6 Attachment support during create record has been implemented. 
 - [ ] 日本語対応（i18nによるローカライズ）
+    - [x] v0.0.8 一部対応
 
 ## Building
 

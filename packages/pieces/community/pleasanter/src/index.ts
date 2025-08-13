@@ -9,10 +9,14 @@ import { createRecord } from './lib/actions/create-record';
 import { updateRecord } from "./lib/actions/update-record";
 import { upsertRecord } from "./lib/actions/upsert-record";
 import { deleteRecord } from "./lib/actions/delete-record";
+import { getAttachment } from './lib/actions/get-attachment';
+import { createGroup } from './lib/actions/create-group';
 import { getGroup } from './lib/actions/get-group';
+import { updateGroup } from './lib/actions/update-group';
 import { deleteGroup } from './lib/actions/delete-group';
 import { createUser } from './lib/actions/create-user';
 import { getUser } from './lib/actions/get-user';
+import { updateUser } from './lib/actions/update-user';
 import { deleteUser } from './lib/actions/delete-user';
 import { createDept } from './lib/actions/create-dept';
 import { getDept } from './lib/actions/get-dept';
@@ -73,6 +77,7 @@ export const pleasanterAuth = PieceAuth.CustomAuth({
 
 export const pleasanter = createPiece({
   displayName: 'Pleasanter(unofficial)',
+  description: 'Unofficial piece for the Pleasanter(no-code/low-code tool by Implem Inc.).',
   auth: pleasanterAuth,
   minimumSupportedRelease: '0.36.1',
   logoUrl: 'https://cdn.activepieces.com/pieces/pleasanter.png',
@@ -81,13 +86,17 @@ export const pleasanter = createPiece({
     createRecord,
     getRecord,
     getRecords,
+    getAttachment,
     updateRecord,
     upsertRecord,
     deleteRecord,
+    createGroup,
     getGroup,
+    updateGroup,
     deleteGroup,
     createUser,
     getUser,
+    updateUser,
     deleteUser,
     createDept,
     getDept,

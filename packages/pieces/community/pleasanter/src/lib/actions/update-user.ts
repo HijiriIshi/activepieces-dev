@@ -3,44 +3,39 @@ import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 import { pleasanterCommon } from '../common';
 import { pleasanterAuth } from '../..';
 
-export const createDept = createAction({
-  name: 'create_dept',
+export const updateUser = createAction({
+  name: 'update_user',
   auth: pleasanterAuth,
-  displayName: 'Create Department',
+  displayName: 'Update User',
   description: '',
   props: {
-    DeptCode: Property.ShortText({
-      displayName: 'DeptCode',
-      description: 'Department code of the department to register',
-      required: true
-    }),
-    DeptName: Property.ShortText({
+    userId: pleasanterCommon.userID,
+    Name: Property.ShortText({
       displayName: 'Name',
-      description: 'Name of the department to register',
+      description: 'Updated User Name',
       required: true
     }),
-    Body: Property.LongText({
-      displayName: 'Body',
-      description: 'Description of the department to register',
+    MailAddresses: Property.Array({
+      displayName: 'MailAddresses',
+      description: 'MailAddresses',
       required: false
-    }),
+    })
   },
   async run(context) {
     const {
-      DeptCode, DeptName, Body
+      userId, Name, MailAddresses
     } = context.propsValue;
     const params: Record<string, unknown> = Object.fromEntries(
       Object.entries({
-        DeptCode,
-        DeptName,
-        Body
+        Name,
+        MailAddresses,
       })
       .filter(([, value]) => value !== undefined)
     );
     
     const res = await httpClient.sendRequest<string[]>({
       method: HttpMethod.POST,
-      url: `${context.auth.baseUrl}/depts/create`,
+      url: `${context.auth.baseUrl}/users/${userId}/update`,
       body: {
         ApiVersion: pleasanterCommon.ApiVersion,
         ApiKey: context.auth.apiKey,

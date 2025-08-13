@@ -1,6 +1,6 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
-import { pleasanterCommon, setIfExists } from '../common';
+import { pleasanterCommon } from '../common';
 import { pleasanterAuth } from '../..';
 
 export const updateDept = createAction({
@@ -10,17 +10,17 @@ export const updateDept = createAction({
   description: '',
   props: {
     deptID: pleasanterCommon.deptID,
-    deptCode: Property.ShortText({
+    DeptCode: Property.ShortText({
       displayName: 'DeptCode',
       description: 'Department code of the updated department',
       required: true
     }),
-    name: Property.ShortText({
+    DeptName: Property.ShortText({
       displayName: 'Name',
       description: 'Updated department name',
       required: true
     }),
-    body: Property.LongText({
+    Body: Property.LongText({
       displayName: 'Body',
       description: 'Updated department description',
       required: false
@@ -28,15 +28,16 @@ export const updateDept = createAction({
   },
   async run(context) {
     const {
-      deptID, deptCode, name, body
+      deptID, DeptCode, DeptName, Body
     } = context.propsValue;
-    const params: Record<string, unknown> = {};
-    const paramsArray: [string, unknown][] = [
-      ['DeptCode', deptCode],
-      ['DeptName', name],
-      ['Body', body],
-    ];
-    paramsArray.forEach(([key, value]) => setIfExists(params, key, value));
+    const params: Record<string, unknown> = Object.fromEntries(
+      Object.entries({
+        DeptCode,
+        DeptName,
+        Body,
+      })
+      .filter(([_, value]) => value !== undefined)
+    );
     
     const res = await httpClient.sendRequest<string[]>({
       method: HttpMethod.POST,

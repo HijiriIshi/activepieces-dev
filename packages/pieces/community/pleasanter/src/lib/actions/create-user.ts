@@ -1,6 +1,6 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
-import { pleasanterCommon, setIfExists } from '../common';
+import { pleasanterCommon } from '../common';
 import { pleasanterAuth } from '../..';
 
 export const createUser = createAction({
@@ -9,22 +9,22 @@ export const createUser = createAction({
   displayName: 'Create User',
   description: '',
   props: {
-    loginId: Property.ShortText({
+    LoginId: Property.ShortText({
       displayName: 'loginId',
       description: 'Enter the login ID of the user to register',
       required: true
     }),
-    name: Property.ShortText({
+    Name: Property.ShortText({
       displayName: 'Name',
       description: 'Name of user to register',
       required: true
     }),
-    password: Property.ShortText({
+    Password: Property.ShortText({
       displayName: 'Password',
       description: 'Password',
       required: true
     }),
-    mailAddresses: Property.Array({
+    MailAddresses: Property.Array({
       displayName: 'MailAddresses',
       description: 'MailAddresses',
       required: false
@@ -32,16 +32,17 @@ export const createUser = createAction({
   },
   async run(context) {
     const {
-      loginId, name, password, mailAddresses
+      LoginId, Name, Password, MailAddresses
     } = context.propsValue;
-    const params: Record<string, unknown> = {};
-    const paramsArray: [string, unknown][] = [
-      ['LoginId', loginId],
-      ['Name', name],
-      ['Password', password],
-      ['MailAddresses', mailAddresses]
-    ];
-    paramsArray.forEach(([key, value]) => setIfExists(params, key, value));
+    const params: Record<string, unknown> = Object.fromEntries(
+      Object.entries({
+        LoginId,
+        Name,
+        Password,
+        MailAddresses,
+      })
+      .filter(([_, value]) => value !== undefined)
+    );
     
     const res = await httpClient.sendRequest<string[]>({
       method: HttpMethod.POST,

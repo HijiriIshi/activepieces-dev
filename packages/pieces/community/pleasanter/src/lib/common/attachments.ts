@@ -1,5 +1,5 @@
 import { Property, ApFile } from '@activepieces/pieces-framework';
-import { createHashOptions } from './item'
+import { createHashOptions } from './utils';
 import mime from 'mime-types';
 
 type AttachmentsCreateHash = Record<string, {
@@ -10,16 +10,26 @@ type AttachmentsCreateHash = Record<string, {
 
 type AttachmentsCreateProps = {
   fieldKey: string;
-  fileName: string | undefined;
+  fileName?: string;
   file: ApFile;
 };
 
-const isAttachmentsCreateProps = (obj: unknown): obj is AttachmentsCreateProps =>
-  typeof obj === 'object' &&
-  obj !== null &&
-  'fieldKey' in obj &&
-  'fileName' in obj &&
-  'file' in obj;
+function isAttachmentsCreateProps(obj: unknown): obj is AttachmentsCreateProps {
+  return typeof obj === 'object' &&
+    obj !== null &&
+    'fieldKey' in obj &&
+    'file' in obj;
+}
+
+function getMimeType(fileName?: string, extension?: string): string {
+  if (fileName) {
+    return mime.lookup(fileName) || 'application/octet-stream';
+  }
+  if (extension) {
+    return mime.lookup(extension) || 'application/octet-stream';
+  }
+  return 'application/octet-stream';
+}
 
 export const attachmentsCreateHash = {
   Props: Property.Array({
@@ -47,25 +57,18 @@ export const attachmentsCreateHash = {
     defaultValue: [],
   }),
 
-  buildHash(attachmentsCreateProps: unknown[] | undefined): AttachmentsCreateHash | undefined {
-    if (!attachmentsCreateProps || attachmentsCreateProps.length === 0) return undefined;
+  buildHash(attachments: unknown[] | undefined): AttachmentsCreateHash | undefined {
+    if (!attachments || attachments.length === 0) return undefined;
     const hash: AttachmentsCreateHash = {};
 
-    for (const item of attachmentsCreateProps) {
+    for (const item of attachments) {
       if (!isAttachmentsCreateProps(item)) continue;
 
       const { fieldKey, fileName, file } = item;
 
-      if (!hash[fieldKey]) {
-        hash[fieldKey] = [];
-      }
+      if (!hash[fieldKey]) hash[fieldKey] = [];
 
-      let mimeType = 'application/octet-stream';
-      if (fileName) {
-        mimeType = mime.lookup(fileName) || mimeType;
-      } else if (file.extension) {
-        mimeType = mime.lookup(file.extension) || mimeType;
-      }
+      const mimeType = getMimeType(fileName, file.extension);
 
       hash[fieldKey].push({
         Name: fileName || file.filename,

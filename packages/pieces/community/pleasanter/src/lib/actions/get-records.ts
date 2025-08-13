@@ -1,6 +1,6 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
-import { pleasanterCommon, setIfExists } from '../common';
+import { pleasanterCommon } from '../common';
 import { pleasanterAuth } from '../..';
 
 export const getRecords = createAction({
@@ -10,25 +10,29 @@ export const getRecords = createAction({
   description: 'retrieves multiple records',
   props: {
     siteID: pleasanterCommon.siteID,
-    offset: Property.Number({
+    Offset: Property.Number({
       displayName: 'Offset',
       description: 'By specifying Offset, you can retrieve subsequent records.',
       required: false,
     }),
+    View: pleasanterCommon.view,
   },
   async run(context) {
-    const { siteID, offset } = context.propsValue;
-    const params: Record<string, unknown> = {};
-    const paramsArray: [string, unknown][] = [
-      ['Offset', offset ],
-    ];
-    paramsArray.forEach(([key, value]) => setIfExists(params, key, value));
+    const { siteID, Offset, View } = context.propsValue;
+    const params: Record<string, unknown> = Object.fromEntries(
+      Object.entries({
+        Offset,
+        View,
+      })
+      .filter(([_, value]) => value !== undefined)
+    );
     const res = await httpClient.sendRequest<string[]>({
       method: HttpMethod.POST,
       url: `${context.auth.baseUrl}/items/${siteID}/get`,
       body: {
         ApiVersion: pleasanterCommon.ApiVersion,
         ApiKey: context.auth.apiKey,
+        ...params,
       },
     });
     return res.body;

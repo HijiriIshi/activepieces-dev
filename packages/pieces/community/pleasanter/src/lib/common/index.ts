@@ -1,11 +1,5 @@
 import { Property } from '@activepieces/pieces-framework';
 
-export function setIfExists(params: Record<string, unknown>, key: string, value: unknown): void {
-  if (value !== undefined && value !== null) {
-    params[key] = value;
-  }
-}
-
 export const pleasanterCommon = {
   ApiVersion: '1.1',
   controllerName: Property.StaticDropdown({
@@ -47,5 +41,15 @@ export const pleasanterCommon = {
     displayName: 'Dept ID',
     description: 'Department ID',
     required: true,
+  }),
+  guid: Property.ShortText({
+    displayName: 'Guid',
+    description: 'the Guid of an attachment',
+    required: true,
+  }),
+  view: Property.Json({
+    displayName: 'View',
+    description: '"Filter" conditions and "Sort" of records',
+    required: false,
   }),
 }
